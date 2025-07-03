@@ -7,6 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -50,12 +51,11 @@ public class Driver {
                     options.addArguments("--headless");
                     driverPool.set(new FirefoxDriver(options));
                 }
-                case "remote-chrome"->{
-                    DesiredCapabilities capabilities = new DesiredCapabilities();
-                    capabilities.setBrowserName("chrome");
-
+                case "grid-chrome-local"->{
+                    ChromeOptions remoteOptions = new ChromeOptions();
+                    remoteOptions.addArguments("--headless=new");
                     try {
-                   driverPool.set(new RemoteWebDriver(new URL(ConfigurationReader.getProperty("local.grid")+"/wd/hub"), capabilities));
+                   driverPool.set(new RemoteWebDriver(new URL(ConfigurationReader.getProperty("local.grid")+"/wd/hub"), remoteOptions));
                     } catch (MalformedURLException e) {
 
                     }
@@ -63,7 +63,7 @@ public class Driver {
                 }
 
 
-                case "remote-firefox"->{
+                case "grid-firefox-local"->{
                     DesiredCapabilities firefox = new DesiredCapabilities();
                     firefox.setBrowserName("firefox");
 
@@ -79,8 +79,8 @@ public class Driver {
 
                 case "remote-chrome-aws"->{
                     ChromeOptions remoteOptions = new ChromeOptions();
-                    remoteOptions.addArguments("--start-maximized");
-                    //remoteOptions.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu");
+                    //remoteOptions.addArguments("--start-maximized");
+                    remoteOptions.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu");
                     try {
                         driverPool.set(new RemoteWebDriver(new URL(gridUrl), remoteOptions));
                     } catch (MalformedURLException e) {
